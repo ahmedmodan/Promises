@@ -1,0 +1,17 @@
+{
+  "name": "promises_for_juniors",
+  "version": "1.0.0",
+  "description": "promises for juniors",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ahmed Modan",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.11.0",
+    "isomorphic-fetch": "^2.2.1",
+    "request": "^2.72.0",
+    "xhr2": "^0.1.3"
+  }
+}
