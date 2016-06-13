@@ -5,6 +5,7 @@ const request = require('request');
 const axios = require('axios');
 
 // 83d07e6a428233fea8fd116228f2fd2c
+// if the above appID does not work get your own free one from openweathermap.org
 const appID = 'INSERT_APP_ID_HERE';
 // write a function that takes in a city name and then returns a string that we can make api calls to.
 const getURL = city => `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${appID}`;
@@ -29,7 +30,7 @@ axios.get(getURL('sanfrancisco'))
 function getWeather(url) {
   // IT IS IMPORTANT TO NOTE that you have to return a promise here.
   return new Promise(function (resolve, reject) {
-    request.get(url, function (err, response) {
+    request.get(getURL(url), function (err, response) {
       // saving the temperature into a variable
       const temp = convertKelvin(JSON.parse(response.body).main.temp);
       // not really error handling, just reject if the temp is less than 50 f.
@@ -43,7 +44,7 @@ function getWeather(url) {
 }
 
 // call getWeather.
-getWeather(getURL('sanfrancisco')) // when you call getWeather it returns a promise.
+getWeather('sanfrancisco') // when you call getWeather it returns a promise.
   .then(function (data) {  // and because it returned a promise it is thenable.
     return data;           // the .then will take in two arguments.
   }, function (err) {      // the first will be a resolve function
@@ -51,7 +52,7 @@ getWeather(getURL('sanfrancisco')) // when you call getWeather it returns a prom
   })
   .then(function (data) {
     console.log('weather for SF:', data); // functions inside of .thens can return two things.
-    return getWeather(getURL('cairo'));   // they can return values like line 49 does or promises like this line.
+    return getWeather('cairo');   // they can return values like line 49 does or return promises like this line.
   })                                      // when you return promises the next .then will wait on the promise before executing.
   .then(function (data) {
     console.log('weather for Cairo:', data)
@@ -72,7 +73,7 @@ is equivalent to
  */
 
 // Promise.resolve is good if you want to only handle the resolved promise. this will never reject a promise.
-const weather = Promise.resolve(getWeather(getURL('sanfrancisco')));
+const weather = Promise.resolve(getWeather('sanfrancisco'));
 weather.then(function(data) {
   console.log(data);
 });
@@ -85,7 +86,7 @@ and when we map we actually make a get request and are returning a promise
 from the getWeather function.
 so citiesWeather will be an array of promises
 */
-const citiesWeather = ['sanfrancisco', 'newyork', 'boston', 'tokyo', 'sydney'].map(city => getWeather(getURL(city)));
+const citiesWeather = ['sanfrancisco', 'newyork', 'boston', 'tokyo', 'sydney'].map(city => getWeather(city));
 /*
 if we try to console.log citiesWeather here it will be an array of pending promises
 because javascript will run the following line before the async calls have been able to fulfill.
